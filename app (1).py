@@ -156,7 +156,7 @@ with col7:
     fig_samsung_stab, ax_samsung_stab = plt.subplots(figsize=(4,4))
     ax_samsung_stab.bar(['Samsung Electronics'], [samsung_stability], color='blue', width = 0.4)
     ax_samsung_stab.set_ylim(0, 100)
-    ax_samsung_stab.set_title("Stbtility")
+    ax_samsung_stab.set_title("Stability")
     ax_samsung_stab.text(0, samsung_stability + 2, f"{samsung_stability:.1f}", ha='center')
     st.pyplot(fig_samsung_stab)
 
