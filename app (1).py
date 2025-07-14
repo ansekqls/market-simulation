@@ -154,7 +154,7 @@ col7, col8 = st.columns(2)
 
 with col7:
     fig_samsung_stab, ax_samsung_stab = plt.subplots(figsize=(4,4))
-    ax_samsung_stab.bar(['Samsung Electronics'], [samsung_stability], color='blue', width = 0.4)
+    ax_samsung_stab.bar(['Samsung Electronics'], [samsung_stability], color='blue', width = 0.08)
     ax_samsung_stab.set_ylim(0, 100)
     ax_samsung_stab.set_title("Stability")
     ax_samsung_stab.text(0, samsung_stability + 2, f"{samsung_stability:.1f}", ha='center')
@@ -162,7 +162,7 @@ with col7:
 
 with col8:
     fig_skhynix_stab, ax_skhynix_stab = plt.subplots(figsize=(4,4))
-    ax_skhynix_stab.bar(['SK hynix'], [skhynix_stability], color='orange', width = 0.4)
+    ax_skhynix_stab.bar(['SK hynix'], [skhynix_stability], color='orange', width = 0.08)
     ax_skhynix_stab.set_ylim(0, 100)
     ax_skhynix_stab.set_title("Stability")
     ax_skhynix_stab.text(0, skhynix_stability + 2, f"{skhynix_stability:.1f}", ha='center')
@@ -175,14 +175,14 @@ col9, col10 = st.columns(2)
 
 with col9:
     fig_samsung_ret, ax_samsung_ret = plt.subplots(figsize=(4,4))
-    ax_samsung_ret.bar(['Samsung Electronics'], [samsung_return_sim], color='blue', width = 0.4)
+    ax_samsung_ret.bar(['Samsung Electronics'], [samsung_return_sim], color='blue', width = 0.08)
     ax_samsung_ret.set_title("Expected Return (%)")
     ax_samsung_ret.text(0, samsung_return_sim + 0.5, f"{samsung_return_sim:.1f}%", ha='center')
     st.pyplot(fig_samsung_ret)
 
 with col10:
     fig_skhynix_ret, ax_skhynix_ret = plt.subplots(figsize=(4,4))
-    ax_skhynix_ret.bar(['SK hynix'], [skhynix_return_sim], color='orange', width = 0.4)
+    ax_skhynix_ret.bar(['SK hynix'], [skhynix_return_sim], color='orange', width = 0.08)
     ax_skhynix_ret.set_title("Expected Return (%)")
     ax_skhynix_ret.text(0, skhynix_return_sim + 0.5, f"{skhynix_return_sim:.1f}%", ha='center')
     st.pyplot(fig_skhynix_ret)
