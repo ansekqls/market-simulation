@@ -106,7 +106,7 @@ skhynix_dates = skhynix_return.index.strftime('%Y-Q%q')
 fig, ax = plt.subplots(figsize=(10,4))
 ax.bar(samsung_dates, samsung_return.values, color='skyblue')
 ax.set_title("Samsung
-fig, ax = plt.subplots(figsize=(10,4))
+fig, ax = plt.subplots(figsize=(10,4)")
 ax.bar(samsung_dates, samsung_return.values, color='skyblue')
 ax.set_title("Samsung Electronics Quarterly Return (%)")
 ax.set_xlabel("Quarter")
