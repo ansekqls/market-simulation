@@ -137,7 +137,7 @@ with col6:
     ax5.grid(axis='y')
     st.pyplot(fig5)
 
-st.header("🔧 삼성전자 & SK하이닉스 안정성/예상 수익률 시뮬레이션")
+st.header("🔧 삼성전자 & SK 하이닉스 안정성/예상 수익률 비교 시뮬레이션")
 
 base_stability, base_return = 50, 5.0
 
@@ -147,42 +147,25 @@ samsung_return_sim = base_return + fx * 2 + investor_sentiment * 1.5
 skhynix_stability = base_stability + rate * 5 - investor_sentiment * 3
 skhynix_return_sim = base_return + fx * 3 + investor_sentiment * 2.0
 
-# 📊 안정성 개별 그래프 2-column
+labels = ['Samsung Electronics', 'SK hynix']
+
+# 📊 Stability - 하나의 그래프
 st.subheader("📊 안정성 점수")
 
-col7, col8 = st.columns(2)
+fig_stab, ax_stab = plt.subplots(figsize=(6,4))
+ax_stab.bar(labels, [samsung_stability, skhynix_stability], color=['blue', 'orange'], width=0.4)
+ax_stab.set_ylim(0, 100)
+ax_stab.set_ylabel("Stability Score (0~100)")
+for i, v in enumerate([samsung_stability, skhynix_stability]):
+    ax_stab.text(i, v + 2, f"{v:.1f}", ha='center')
+st.pyplot(fig_stab)
 
-with col7:
-    fig_samsung_stab, ax_samsung_stab = plt.subplots(figsize=(4,4))
-    ax_samsung_stab.bar(['Samsung Electronics'], [samsung_stability], color='blue', width = 0.08)
-    ax_samsung_stab.set_ylim(0, 100)
-    ax_samsung_stab.set_title("Stability")
-    ax_samsung_stab.text(0, samsung_stability + 2, f"{samsung_stability:.1f}", ha='center')
-    st.pyplot(fig_samsung_stab)
-
-with col8:
-    fig_skhynix_stab, ax_skhynix_stab = plt.subplots(figsize=(4,4))
-    ax_skhynix_stab.bar(['SK hynix'], [skhynix_stability], color='orange', width = 0.08)
-    ax_skhynix_stab.set_ylim(0, 100)
-    ax_skhynix_stab.set_title("Stability")
-    ax_skhynix_stab.text(0, skhynix_stability + 2, f"{skhynix_stability:.1f}", ha='center')
-    st.pyplot(fig_skhynix_stab)
-
-# 📊 예상 수익률 개별 그래프 2-column
+# 📊 Expected Return - 하나의 그래프
 st.subheader("📊 예상 수익률")
 
-col9, col10 = st.columns(2)
-
-with col9:
-    fig_samsung_ret, ax_samsung_ret = plt.subplots(figsize=(4,4))
-    ax_samsung_ret.bar(['Samsung Electronics'], [samsung_return_sim], color='blue', width = 0.08)
-    ax_samsung_ret.set_title("Expected Return (%)")
-    ax_samsung_ret.text(0, samsung_return_sim + 0.5, f"{samsung_return_sim:.1f}%", ha='center')
-    st.pyplot(fig_samsung_ret)
-
-with col10:
-    fig_skhynix_ret, ax_skhynix_ret = plt.subplots(figsize=(4,4))
-    ax_skhynix_ret.bar(['SK hynix'], [skhynix_return_sim], color='orange', width = 0.08)
-    ax_skhynix_ret.set_title("Expected Return (%)")
-    ax_skhynix_ret.text(0, skhynix_return_sim + 0.5, f"{skhynix_return_sim:.1f}%", ha='center')
-    st.pyplot(fig_skhynix_ret)
+fig_ret, ax_ret = plt.subplots(figsize=(6,4))
+ax_ret.bar(labels, [samsung_return_sim, skhynix_return_sim], color=['blue', 'orange'], width=0.4)
+ax_ret.set_ylabel("Expected Return (%)")
+for i, v in enumerate([samsung_return_sim, skhynix_return_sim]):
+    ax_ret.text(i, v + 0.5, f"{v:.1f}%", ha='center')
+st.pyplot(fig_ret)
