@@ -50,7 +50,7 @@ st.markdown(f"""
 👉 관련 ETF: KODEX {best_sector}, TIGER {best_sector}
 """)
 
-# 🔔 추가: 삼성전자 & SK하이닉스 주요 지표
+# 🔔 삼성전자 & SK하이닉스 주요 지표
 st.header("📋 삼성전자 & SK하이닉스 주요 지표")
 
 samsung = yf.Ticker("005930.KS")
@@ -88,7 +88,7 @@ st.dataframe(samsung_df)
 st.subheader("SK hynix")
 st.dataframe(skhynix_df)
 
-# 🔔 추가: 3개월 단위 수익률 그래프
+# 🔔 3개월 단위 수익률 그래프
 st.header("📊 삼성전자 & SK하이닉스 3개월(분기) 수익률")
 
 samsung_hist = samsung.history(period="1y")
@@ -105,9 +105,6 @@ skhynix_dates = skhynix_return.index.strftime('%Y-Q%q')
 
 fig, ax = plt.subplots(figsize=(10,4))
 ax.bar(samsung_dates, samsung_return.values, color='skyblue')
-ax.set_title("Samsung
-fig, ax = plt.subplots(figsize=(10,4)")
-ax.bar(samsung_dates, samsung_return.values, color='skyblue')
 ax.set_title("Samsung Electronics Quarterly Return (%)")
 ax.set_xlabel("Quarter")
 ax.set_ylabel("Return (%)")
@@ -121,3 +118,4 @@ ax2.set_xlabel("Quarter")
 ax2.set_ylabel("Return (%)")
 ax2.grid(axis='y')
 st.pyplot(fig2)
+
