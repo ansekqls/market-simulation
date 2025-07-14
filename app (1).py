@@ -50,36 +50,31 @@ st.markdown(f"""
 👉 관련 ETF: KODEX {best_sector}, TIGER {best_sector}
 """)
 
-# 🔔 삼성전자 & SK하이닉스 주요 지표 (PER, PBR은 고정 / Dividend Yield, Market Cap은 yfinance)
+# 📋 삼성전자 & SK하이닉스 주요 지표 (PER/PBR: 고정, 배당수익률/시가총액: 실시간)
 st.header("📋 삼성전자 & SK하이닉스 주요 지표")
 
 samsung = yf.Ticker("005930.KS")
 skhynix = yf.Ticker("000660.KS")
-
 samsung_info = samsung.info
 skhynix_info = skhynix.info
 
-# PER, PBR 고정 값
-samsung_per = 12.1
-samsung_pbr = 1.1
-skhynix_per = 8.3
-skhynix_pbr = 2.5
+# 고정값
+samsung_per, samsung_pbr = 12.1, 1.1
+skhynix_per, skhynix_pbr = 8.3, 2.5
 
-# Dividend Yield, Market Cap 실시간 값
+# 실시간 값
 samsung_div = round(samsung_info.get('dividendYield', 0) * 100, 2) if samsung_info.get('dividendYield') else 0
 skhynix_div = round(skhynix_info.get('dividendYield', 0) * 100, 2) if skhynix_info.get('dividendYield') else 0
-
 samsung_mcap = samsung_info.get('marketCap', 'N/A')
 skhynix_mcap = skhynix_info.get('marketCap', 'N/A')
 
-# DataFrame
 samsung_df = pd.DataFrame({
-    '지표': ['PER', 'PBR', '배당수익률 (%)', '시가총액 (원)'],
+    '지표': ['PER', 'PBR', '배당수익률 (%)', '시가총액'],
     'Samsung Electronics': [samsung_per, samsung_pbr, samsung_div, samsung_mcap]
 })
 
 skhynix_df = pd.DataFrame({
-    '지표': ['PER', 'PBR', '배당수익률 (%)', '시가총액 (원)'],
+    '지표': ['PER', 'PBR', '배당수익률 (%)', '시가총액'],
     'SK hynix': [skhynix_per, skhynix_pbr, skhynix_div, skhynix_mcap]
 })
 
@@ -92,20 +87,17 @@ with col2:
     st.subheader("SK hynix")
     st.dataframe(skhynix_df)
 
-# 🔔 주가 데이터 다운로드
+# 📈 최근 1년 주가 그래프 (2-column)
+st.header("📈 삼성전자 & SK하이닉스 최근 1년 주가 그래프")
+
 samsung_hist = samsung.history(period="1y")
 skhynix_hist = skhynix.history(period="1y")
-
-# 📈 최근 1년 주가 그래프 → 2-column
-st.header("📈 삼성전자 & SK하이닉스 최근 1년 주가 그래프")
 
 col3, col4 = st.columns(2)
 with col3:
     fig_samsung, ax_samsung = plt.subplots(figsize=(6,4))
     ax_samsung.plot(samsung_hist.index, samsung_hist['Close'], color='blue')
     ax_samsung.set_title("Samsung Electronics")
-    ax_samsung.set_xlabel("Date")
-    ax_samsung.set_ylabel("Close Price (KRW)")
     ax_samsung.grid(True)
     st.pyplot(fig_samsung)
 
@@ -113,12 +105,10 @@ with col4:
     fig_skhynix, ax_skhynix = plt.subplots(figsize=(6,4))
     ax_skhynix.plot(skhynix_hist.index, skhynix_hist['Close'], color='orange')
     ax_skhynix.set_title("SK hynix")
-    ax_skhynix.set_xlabel("Date")
-    ax_skhynix.set_ylabel("Close Price (KRW)")
     ax_skhynix.grid(True)
     st.pyplot(fig_skhynix)
 
-# 📊 월간 수익률 그래프 → 2-column
+# 📊 월간 수익률 그래프 (2-column)
 st.header("📊 삼성전자 & SK하이닉스 월간 수익률")
 
 samsung_month = samsung_hist['Close'].resample('M').last()
@@ -135,8 +125,6 @@ with col5:
     fig4, ax4 = plt.subplots(figsize=(6,4))
     ax4.bar(samsung_dates, samsung_return.values, color='skyblue')
     ax4.set_title("Samsung Electronics Monthly Return (%)")
-    ax4.set_xlabel("Month")
-    ax4.set_ylabel("Return (%)")
     ax4.tick_params(axis='x', rotation=45)
     ax4.grid(axis='y')
     st.pyplot(fig4)
@@ -145,8 +133,40 @@ with col6:
     fig5, ax5 = plt.subplots(figsize=(6,4))
     ax5.bar(skhynix_dates, skhynix_return.values, color='orange')
     ax5.set_title("SK hynix Monthly Return (%)")
-    ax5.set_xlabel("Month")
-    ax5.set_ylabel("Return (%)")
     ax5.tick_params(axis='x', rotation=45)
     ax5.grid(axis='y')
     st.pyplot(fig5)
+
+# 🔧 안정성/예상 수익률 시뮬레이션 (막대그래프)
+st.header("🔧 안정성/예상 수익률 시뮬레이션")
+
+base_stability, base_return = 50, 5.0
+
+samsung_stability = base_stability + rate * 10 - investor_sentiment * 5
+samsung_return_sim = base_return + fx * 2 + investor_sentiment * 1.5
+
+skhynix_stability = base_stability + rate * 5 - investor_sentiment * 3
+skhynix_return_sim = base_return + fx * 3 + investor_sentiment * 2.0
+
+labels = ['Samsung Electronics', 'SK hynix']
+
+# 안정성 그래프
+st.subheader("📊 안정성 점수 비교")
+fig_stab, ax_stab = plt.subplots(figsize=(5,4))
+stab_scores = [samsung_stability, skhynix_stability]
+ax_stab.bar(labels, stab_scores, color=['blue', 'orange'])
+ax_stab.set_ylabel("안정성 점수 (0~100)")
+ax_stab.set_ylim(0, 100)
+for i, v in enumerate(stab_scores):
+    ax_stab.text(i, v + 2, f"{v:.1f}", ha='center')
+st.pyplot(fig_stab)
+
+# 예상 수익률 그래프
+st.subheader("📊 예상 수익률 비교")
+fig_ret, ax_ret = plt.subplots(figsize=(5,4))
+ret_scores = [samsung_return_sim, skhynix_return_sim]
+ax_ret.bar(labels, ret_scores, color=['blue', 'orange'])
+ax_ret.set_ylabel("예상 수익률 (%)")
+for i, v in enumerate(ret_scores):
+    ax_ret.text(i, v + 0.5, f"{v:.1f}%", ha='center')
+st.pyplot(fig_ret)
