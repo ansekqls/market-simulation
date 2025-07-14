@@ -50,17 +50,37 @@ st.markdown(f"""
 👉 관련 ETF: KODEX {best_sector}, TIGER {best_sector}
 """)
 
-# 🔔 삼성전자 & SK하이닉스 주요 지표 (하드코딩된 값 사용)
-st.header("📋 삼성전자 & SK하이닉스 주요 지표 (고정값)")
+# 🔔 삼성전자 & SK하이닉스 주요 지표 (PER, PBR은 고정 / Dividend Yield, Market Cap은 yfinance)
+st.header("📋 삼성전자 & SK하이닉스 주요 지표")
 
+samsung = yf.Ticker("005930.KS")
+skhynix = yf.Ticker("000660.KS")
+
+samsung_info = samsung.info
+skhynix_info = skhynix.info
+
+# PER, PBR 고정 값
+samsung_per = 12.1
+samsung_pbr = 1.1
+skhynix_per = 8.3
+skhynix_pbr = 2.5
+
+# Dividend Yield, Market Cap 실시간 값
+samsung_div = round(samsung_info.get('dividendYield', 0) * 100, 2) if samsung_info.get('dividendYield') else 0
+skhynix_div = round(skhynix_info.get('dividendYield', 0) * 100, 2) if skhynix_info.get('dividendYield') else 0
+
+samsung_mcap = samsung_info.get('marketCap', 'N/A')
+skhynix_mcap = skhynix_info.get('marketCap', 'N/A')
+
+# DataFrame
 samsung_df = pd.DataFrame({
-    '지표': ['PER', 'PBR'],
-    'Samsung Electronics': [12.1, 1.1]
+    '지표': ['PER', 'PBR', 'Dividend Yield (%)', 'Market Cap'],
+    'Samsung Electronics': [samsung_per, samsung_pbr, samsung_div, samsung_mcap]
 })
 
 skhynix_df = pd.DataFrame({
-    '지표': ['PER', 'PBR'],
-    'SK hynix': [8.3, 2.5]
+    '지표': ['PER', 'PBR', 'Dividend Yield (%)', 'Market Cap'],
+    'SK hynix': [skhynix_per, skhynix_pbr, skhynix_div, skhynix_mcap]
 })
 
 col1, col2 = st.columns(2)
@@ -73,8 +93,6 @@ with col2:
     st.dataframe(skhynix_df)
 
 # 🔔 주가 데이터 다운로드
-samsung = yf.Ticker("005930.KS")
-skhynix = yf.Ticker("000660.KS")
 samsung_hist = samsung.history(period="1y")
 skhynix_hist = skhynix.history(period="1y")
 
