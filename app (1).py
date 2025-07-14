@@ -88,47 +88,64 @@ st.dataframe(samsung_df)
 st.subheader("SK hynix")
 st.dataframe(skhynix_df)
 
-# 🔔 삼성전자 & SK하이닉스 주가 데이터 다운로드
+# 🔔 주가 데이터 다운로드
 samsung_hist = samsung.history(period="1y")
 skhynix_hist = skhynix.history(period="1y")
 
-# 📈 최근 1년 주가 그래프 먼저 출력
+# 📈 최근 1년 주가 그래프 → 2-column
 st.header("📈 삼성전자 & SK하이닉스 최근 1년 주가 그래프")
 
-fig3, ax3 = plt.subplots(figsize=(12, 5))
-ax3.plot(samsung_hist.index, samsung_hist['Close'], label='Samsung Electronics', color='blue')
-ax3.plot(skhynix_hist.index, skhynix_hist['Close'], label='SK hynix', color='orange')
-ax3.set_title("Samsung Electronics vs SK hynix Stock Price (Last 1 Year)")
-ax3.set_xlabel("Date")
-ax3.set_ylabel("Close Price (KRW)")
-ax3.legend()
-ax3.grid(True)
-st.pyplot(fig3)
+col1, col2 = st.columns(2)
 
-# 📊 3개월 단위 수익률 그래프
-st.header("📊 삼성전자 & SK하이닉스 3개월(분기) 수익률")
+with col1:
+    fig_samsung, ax_samsung = plt.subplots(figsize=(6,4))
+    ax_samsung.plot(samsung_hist.index, samsung_hist['Close'], color='blue')
+    ax_samsung.set_title("Samsung Electronics")
+    ax_samsung.set_xlabel("Date")
+    ax_samsung.set_ylabel("Close Price (KRW)")
+    ax_samsung.grid(True)
+    st.pyplot(fig_samsung)
 
-samsung_quarter = samsung_hist['Close'].resample('Q').last()
-skhynix_quarter = skhynix_hist['Close'].resample('Q').last()
+with col2:
+    fig_skhynix, ax_skhynix = plt.subplots(figsize=(6,4))
+    ax_skhynix.plot(skhynix_hist.index, skhynix_hist['Close'], color='orange')
+    ax_skhynix.set_title("SK hynix")
+    ax_skhynix.set_xlabel("Date")
+    ax_skhynix.set_ylabel("Close Price (KRW)")
+    ax_skhynix.grid(True)
+    st.pyplot(fig_skhynix)
 
-samsung_return = samsung_quarter.pct_change().dropna() * 100
-skhynix_return = skhynix_quarter.pct_change().dropna() * 100
+# 📊 월간 수익률 그래프 → 2-column
+st.header("📊 삼성전자 & SK하이닉스 월간 수익률")
 
-samsung_dates = samsung_return.index.strftime('%Y-Q%q')
-skhynix_dates = skhynix_return.index.strftime('%Y-Q%q')
+# 월말 기준 수익률
+samsung_month = samsung_hist['Close'].resample('M').last()
+skhynix_month = skhynix_hist['Close'].resample('M').last()
 
-fig4, ax4 = plt.subplots(figsize=(10,4))
-ax4.bar(samsung_dates, samsung_return.values, color='skyblue')
-ax4.set_title("Samsung Electronics Quarterly Return (%)")
-ax4.set_xlabel("Quarter")
-ax4.set_ylabel("Return (%)")
-ax4.grid(axis='y')
-st.pyplot(fig4)
+samsung_return = samsung_month.pct_change().dropna() * 100
+skhynix_return = skhynix_month.pct_change().dropna() * 100
 
-fig5, ax5 = plt.subplots(figsize=(10,4))
-ax5.bar(skhynix_dates, skhynix_return.values, color='orange')
-ax5.set_title("SK hynix Quarterly Return (%)")
-ax5.set_xlabel("Quarter")
-ax5.set_ylabel("Return (%)")
-ax5.grid(axis='y')
-st.pyplot(fig5)
+samsung_dates = samsung_return.index.strftime('%Y-%m')
+skhynix_dates = skhynix_return.index.strftime('%Y-%m')
+
+col3, col4 = st.columns(2)
+
+with col3:
+    fig4, ax4 = plt.subplots(figsize=(6,4))
+    ax4.bar(samsung_dates, samsung_return.values, color='skyblue')
+    ax4.set_title("Samsung Electronics Monthly Return (%)")
+    ax4.set_xlabel("Month")
+    ax4.set_ylabel("Return (%)")
+    ax4.tick_params(axis='x', rotation=45)
+    ax4.grid(axis='y')
+    st.pyplot(fig4)
+
+with col4:
+    fig5, ax5 = plt.subplots(figsize=(6,4))
+    ax5.bar(skhynix_dates, skhynix_return.values, color='orange')
+    ax5.set_title("SK hynix Monthly Return (%)")
+    ax5.set_xlabel("Month")
+    ax5.set_ylabel("Return (%)")
+    ax5.tick_params(axis='x', rotation=45)
+    ax5.grid(axis='y')
+    st.pyplot(fig5)
