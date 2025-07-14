@@ -34,10 +34,10 @@ if sector_df['영향도'].max() > 0:
     best_sector = sector_df['영향도'].idxmax()
     st.success(f"✅ 유리한 산업: {best_sector} → 관련 ETF/테마주에 주목")
 else:
+    best_sector = "없음"
     st.warning("📉 모든 산업이 부정적 영향을 받는 상황입니다.")
 
 st.subheader("📝 요약 리포트")
-best_sector = best_sector if sector_df['영향도'].max() > 0 else "없음"
 st.markdown(f"""
 - **기준금리 변화**: `{rate}`%
 - **유가 변화**: `{oil}`%
@@ -50,7 +50,27 @@ st.markdown(f"""
 👉 관련 ETF: KODEX {best_sector}, TIGER {best_sector}
 """)
 
-# 📋 삼성전자 & SK하이닉스 주요 지표 (PER/PBR: 고정, 배당수익률/시가총액: 실시간)
+# 🔔 추천 테마/종목 리스트
+sector_theme_map = {
+    '은행': ['KODEX 은행', 'KB금융', '신한지주'],
+    '건설': ['KODEX 건설', '현대건설', 'DL이앤씨'],
+    '에너지': ['KODEX 에너지', 'S-Oil', 'GS'],
+    'IT': ['KODEX IT', '네이버', '카카오'],
+    '소비재': ['KODEX 소비재', 'CJ제일제당', '아모레퍼시픽'],
+    '반도체': ['KODEX 반도체', '삼성전자', 'SK하이닉스']
+}
+
+st.subheader("📋 추천 테마 및 대표 종목")
+if best_sector != "없음":
+    st.markdown(f"추천 산업: **{best_sector}**")
+    themes = sector_theme_map.get(best_sector, [])
+    st.markdown("**추천 ETF 및 대표 종목:**")
+    for theme in themes:
+        st.write(f"- {theme}")
+else:
+    st.write("추천 테마가 없습니다.")
+
+# 📋 삼성전자 & SK하이닉스 주요 지표
 st.header("📋 삼성전자 & SK하이닉스 주요 지표")
 
 samsung = yf.Ticker("005930.KS")
@@ -137,6 +157,7 @@ with col6:
     ax5.grid(axis='y')
     st.pyplot(fig5)
 
+# 🔧 안정성/예상 수익률 시뮬레이션
 st.header("🔧 삼성전자 & SK 하이닉스 안정성/예상 수익률 비교 시뮬레이션")
 
 base_stability, base_return = 50, 5.0
@@ -149,9 +170,7 @@ skhynix_return_sim = base_return + fx * 3 + investor_sentiment * 2.0
 
 labels = ['Samsung Electronics', 'SK hynix']
 
-# 📊 Stability - 하나의 그래프
-st.subheader("📊 안정성 점수")
-
+st.subheader("📊 Stability Score Comparison")
 fig_stab, ax_stab = plt.subplots(figsize=(6,4))
 ax_stab.bar(labels, [samsung_stability, skhynix_stability], color=['blue', 'orange'], width=0.4)
 ax_stab.set_ylim(0, 100)
@@ -160,9 +179,7 @@ for i, v in enumerate([samsung_stability, skhynix_stability]):
     ax_stab.text(i, v + 2, f"{v:.1f}", ha='center')
 st.pyplot(fig_stab)
 
-# 📊 Expected Return - 하나의 그래프
-st.subheader("📊 예상 수익률")
-
+st.subheader("📊 Expected Return Comparison")
 fig_ret, ax_ret = plt.subplots(figsize=(6,4))
 ax_ret.bar(labels, [samsung_return_sim, skhynix_return_sim], color=['blue', 'orange'], width=0.4)
 ax_ret.set_ylabel("Expected Return (%)")
