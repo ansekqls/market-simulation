@@ -50,54 +50,39 @@ st.markdown(f"""
 👉 관련 ETF: KODEX {best_sector}, TIGER {best_sector}
 """)
 
-# 🔔 삼성전자 & SK하이닉스 주요 지표
-st.header("📋 삼성전자 & SK하이닉스 주요 지표")
-
-samsung = yf.Ticker("005930.KS")
-skhynix = yf.Ticker("000660.KS")
-
-samsung_info = samsung.info
-skhynix_info = skhynix.info
-
-def get_value(info, key):
-    return info[key] if key in info and info[key] is not None else 'N/A'
+# 🔔 삼성전자 & SK하이닉스 주요 지표 (하드코딩된 값 사용)
+st.header("📋 삼성전자 & SK하이닉스 주요 지표 (고정값)")
 
 samsung_df = pd.DataFrame({
-    '지표': ['PER', 'PBR', 'Dividend Yield (%)', 'Market Cap'],
-    'Samsung': [
-        get_value(samsung_info, 'trailingPE'),
-        get_value(samsung_info, 'priceToBook'),
-        round(get_value(samsung_info, 'dividendYield') * 100, 2) if samsung_info.get('dividendYield') else 0,
-        get_value(samsung_info, 'marketCap')
-    ]
+    '지표': ['PER', 'PBR'],
+    'Samsung Electronics': [12.1, 1.1]
 })
 
 skhynix_df = pd.DataFrame({
-    '지표': ['PER', 'PBR', 'Dividend Yield (%)', 'Market Cap'],
-    'SK hynix': [
-        get_value(skhynix_info, 'trailingPE'),
-        get_value(skhynix_info, 'priceToBook'),
-        round(get_value(skhynix_info, 'dividendYield') * 100, 2) if skhynix_info.get('dividendYield') else 0,
-        get_value(skhynix_info, 'marketCap')
-    ]
+    '지표': ['PER', 'PBR'],
+    'SK hynix': [8.3, 2.5]
 })
 
-st.subheader("Samsung Electronics")
-st.dataframe(samsung_df)
+col1, col2 = st.columns(2)
+with col1:
+    st.subheader("Samsung Electronics")
+    st.dataframe(samsung_df)
 
-st.subheader("SK hynix")
-st.dataframe(skhynix_df)
+with col2:
+    st.subheader("SK hynix")
+    st.dataframe(skhynix_df)
 
 # 🔔 주가 데이터 다운로드
+samsung = yf.Ticker("005930.KS")
+skhynix = yf.Ticker("000660.KS")
 samsung_hist = samsung.history(period="1y")
 skhynix_hist = skhynix.history(period="1y")
 
 # 📈 최근 1년 주가 그래프 → 2-column
 st.header("📈 삼성전자 & SK하이닉스 최근 1년 주가 그래프")
 
-col1, col2 = st.columns(2)
-
-with col1:
+col3, col4 = st.columns(2)
+with col3:
     fig_samsung, ax_samsung = plt.subplots(figsize=(6,4))
     ax_samsung.plot(samsung_hist.index, samsung_hist['Close'], color='blue')
     ax_samsung.set_title("Samsung Electronics")
@@ -106,7 +91,7 @@ with col1:
     ax_samsung.grid(True)
     st.pyplot(fig_samsung)
 
-with col2:
+with col4:
     fig_skhynix, ax_skhynix = plt.subplots(figsize=(6,4))
     ax_skhynix.plot(skhynix_hist.index, skhynix_hist['Close'], color='orange')
     ax_skhynix.set_title("SK hynix")
@@ -118,7 +103,6 @@ with col2:
 # 📊 월간 수익률 그래프 → 2-column
 st.header("📊 삼성전자 & SK하이닉스 월간 수익률")
 
-# 월말 기준 수익률
 samsung_month = samsung_hist['Close'].resample('M').last()
 skhynix_month = skhynix_hist['Close'].resample('M').last()
 
@@ -128,9 +112,8 @@ skhynix_return = skhynix_month.pct_change().dropna() * 100
 samsung_dates = samsung_return.index.strftime('%Y-%m')
 skhynix_dates = skhynix_return.index.strftime('%Y-%m')
 
-col3, col4 = st.columns(2)
-
-with col3:
+col5, col6 = st.columns(2)
+with col5:
     fig4, ax4 = plt.subplots(figsize=(6,4))
     ax4.bar(samsung_dates, samsung_return.values, color='skyblue')
     ax4.set_title("Samsung Electronics Monthly Return (%)")
@@ -140,7 +123,7 @@ with col3:
     ax4.grid(axis='y')
     st.pyplot(fig4)
 
-with col4:
+with col6:
     fig5, ax5 = plt.subplots(figsize=(6,4))
     ax5.bar(skhynix_dates, skhynix_return.values, color='orange')
     ax5.set_title("SK hynix Monthly Return (%)")
