@@ -88,6 +88,23 @@ st.dataframe(samsung_df)
 st.subheader("SK hynix")
 st.dataframe(skhynix_df)
 
+st.header("📈 삼성전자 & SK하이닉스 최근 1년 주가 그래프")
+
+# 최근 1년 종가 데이터
+samsung_close = samsung_hist['Close']
+skhynix_close = skhynix_hist['Close']
+
+fig3, ax3 = plt.subplots(figsize=(12, 5))
+ax3.plot(samsung_close.index, samsung_close.values, label='Samsung Electronics', color='blue')
+ax3.plot(skhynix_close.index, skhynix_close.values, label='SK hynix', color='orange')
+ax3.set_title("Samsung Electronics vs SK hynix Stock Price (Last 1 Year)")
+ax3.set_xlabel("Date")
+ax3.set_ylabel("Close Price (KRW)")
+ax3.legend()
+ax3.grid(True)
+st.pyplot(fig3)
+
+
 # 🔔 3개월 단위 수익률 그래프
 st.header("📊 삼성전자 & SK하이닉스 3개월(분기) 수익률")
 
