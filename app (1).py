@@ -74,12 +74,12 @@ skhynix_mcap = skhynix_info.get('marketCap', 'N/A')
 
 # DataFrame
 samsung_df = pd.DataFrame({
-    '지표': ['PER', 'PBR', 'Dividend Yield (%)', 'Market Cap'],
+    '지표': ['PER', 'PBR', '배당수익률 (%)', '시가총액 (원)'],
     'Samsung Electronics': [samsung_per, samsung_pbr, samsung_div, samsung_mcap]
 })
 
 skhynix_df = pd.DataFrame({
-    '지표': ['PER', 'PBR', 'Dividend Yield (%)', 'Market Cap'],
+    '지표': ['PER', 'PBR', '배당수익률 (%)', '시가총액 (원)'],
     'SK hynix': [skhynix_per, skhynix_pbr, skhynix_div, skhynix_mcap]
 })
 
