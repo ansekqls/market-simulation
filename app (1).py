@@ -90,21 +90,21 @@ skhynix_mcap = skhynix_info.get('marketCap', 'N/A')
 
 samsung_df = pd.DataFrame({
     '지표': ['PER', 'PBR', '배당수익률 (%)', '시가총액'],
-    'Samsung Electronics': [samsung_per, samsung_pbr, samsung_div, samsung_mcap]
+    'Samsung Electronics': [samsung_per, samsung_pbr, samsung_div/10, samsung_mcap]
 })
 
 skhynix_df = pd.DataFrame({
     '지표': ['PER', 'PBR', '배당수익률 (%)', '시가총액'],
-    'SK hynix': [skhynix_per, skhynix_pbr, skhynix_div, skhynix_mcap]
+    'SK hynix': [skhynix_per, skhynix_pbr, skhynix_div/10, skhynix_mcap]
 })
 
 col1, col2 = st.columns(2)
 with col1:
-    st.subheader("Samsung Electronics")
+    st.subheader("삼성전자")
     st.dataframe(samsung_df)
 
 with col2:
-    st.subheader("SK hynix")
+    st.subheader("SK 하이닉스")
     st.dataframe(skhynix_df)
 
 # 📈 최근 1년 주가 그래프 (2-column)
