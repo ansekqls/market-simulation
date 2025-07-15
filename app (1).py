@@ -187,10 +187,6 @@ for i, v in enumerate([samsung_return_sim, skhynix_return_sim]):
     ax_ret.text(i, v + 0.5, f"{v:.1f}%", ha='center')
 st.pyplot(fig_ret)
 
-import pandas as pd
-import yfinance as yf
-import matplotlib.pyplot as plt
-
 # 데이터 다운로드
 samsung = yf.download("005930.KS", period="3y")['Close']
 skhynix = yf.download("000660.KS", period="3y")['Close']
