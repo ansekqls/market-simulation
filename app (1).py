@@ -170,7 +170,7 @@ skhynix_return_sim = base_return + fx * 3 + investor_sentiment * 2.0
 
 labels = ['Samsung Electronics', 'SK hynix']
 
-st.subheader("📊 Stability Score Comparison")
+st.subheader("📊 안정성 비교")
 fig_stab, ax_stab = plt.subplots(figsize=(6,4))
 ax_stab.bar(labels, [samsung_stability, skhynix_stability], color=['blue', 'orange'], width=0.4)
 ax_stab.set_ylim(0, 100)
@@ -179,7 +179,7 @@ for i, v in enumerate([samsung_stability, skhynix_stability]):
     ax_stab.text(i, v + 2, f"{v:.1f}", ha='center')
 st.pyplot(fig_stab)
 
-st.subheader("📊 Expected Return Comparison")
+st.subheader("📊 예상 수익률 (%)")
 fig_ret, ax_ret = plt.subplots(figsize=(6,4))
 ax_ret.bar(labels, [samsung_return_sim, skhynix_return_sim], color=['blue', 'orange'], width=0.4)
 ax_ret.set_ylabel("Expected Return (%)")
