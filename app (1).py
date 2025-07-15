@@ -186,3 +186,66 @@ ax_ret.set_ylabel("Expected Return (%)")
 for i, v in enumerate([samsung_return_sim, skhynix_return_sim]):
     ax_ret.text(i, v + 0.5, f"{v:.1f}%", ha='center')
 st.pyplot(fig_ret)
+
+import pandas as pd
+import yfinance as yf
+import matplotlib.pyplot as plt
+
+# 데이터 다운로드
+samsung = yf.download("005930.KS", period="3y")['Close']
+skhynix = yf.download("000660.KS", period="3y")['Close']
+usdkrw = yf.download("KRW=X", period="3y")['Close']
+
+# 3개월 단위 리샘플링
+samsung_q = samsung.resample('Q').last()
+skhynix_q = skhynix.resample('Q').last()
+usdkrw_q = usdkrw.resample('Q').last()
+
+# 3개월 수익률 / 변화율 계산
+samsung_ret = samsung_q.pct_change().dropna() * 100
+skhynix_ret = skhynix_q.pct_change().dropna() * 100
+usdkrw_chg = usdkrw_q.pct_change().dropna() * 100
+
+# 데이터 병합
+df = pd.concat([samsung_ret, skhynix_ret, usdkrw_chg], axis=1).dropna()
+df.columns = ['Samsung Return', 'SK hynix Return', 'USD/KRW Change']
+
+# 📈 시계열 그래프 (삼성전자)
+plt.figure(figsize=(10,4))
+plt.plot(df.index, df['Samsung Return'], label='Samsung 3M Return (%)', color='blue')
+plt.plot(df.index, df['USD/KRW Change'], label='USD/KRW 3M Change (%)', color='black', linestyle='--')
+plt.legend()
+plt.title('삼성전자 3개월 수익률 vs 환율 3개월 변화율')
+plt.xticks(rotation=45)
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# 📈 시계열 그래프 (SK하이닉스)
+plt.figure(figsize=(10,4))
+plt.plot(df.index, df['SK hynix Return'], label='SK hynix 3M Return (%)', color='orange')
+plt.plot(df.index, df['USD/KRW Change'], label='USD/KRW 3M Change (%)', color='black', linestyle='--')
+plt.legend()
+plt.title('SK하이닉스 3개월 수익률 vs 환율 3개월 변화율')
+plt.xticks(rotation=45)
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# 📊 산점도 (삼성전자)
+plt.figure(figsize=(6,6))
+plt.scatter(df['USD/KRW Change'], df['Samsung Return'], color='blue')
+plt.xlabel('USD/KRW 3M Change (%)')
+plt.ylabel('Samsung 3M Return (%)')
+plt.title('삼성전자: 수익률 vs 환율 변화율')
+plt.grid(True)
+plt.show()
+
+# 📊 산점도 (SK하이닉스)
+plt.figure(figsize=(6,6))
+plt.scatter(df['USD/KRW Change'], df['SK hynix Return'], color='orange')
+plt.xlabel('USD/KRW 3M Change (%)')
+plt.ylabel('SK hynix 3M Return (%)')
+plt.title('SK하이닉스: 수익률 vs 환율 변화율')
+plt.grid(True)
+plt.show()
